@@ -20,10 +20,11 @@ from modules import shared
 from modules.chat import generate_chat_reply
 from modules.LoRA import add_lora_to_model
 from modules.models import load_model, unload_model
+from modules.models_settings import (get_model_settings_from_yamls,
+                                     update_model_parameters)
 from modules.text_generation import (encode, generate_reply,
                                      stop_everything_event)
 from modules.utils import get_available_models
-from server import get_model_specific_settings, update_model_parameters
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = str(uuid.uuid4())
@@ -79,7 +80,7 @@ def model():
             shared.model_name = model_name
             unload_model()
 
-            model_settings = get_model_specific_settings(shared.model_name)
+            model_settings = get_model_settings_from_yamls(shared.model_name)
             shared.settings.update(model_settings)
             update_model_parameters(model_settings, initial=True)
 
